@@ -1,10 +1,17 @@
 // Import the mongoose library
 const mongoose = require('mongoose');
+const User = require('./User');
 // Destructure the Schema class from mongoose
 const { Schema } = mongoose;
 
 // Define a new schema for the notes
 const NotesSchema = new Schema({
+  user:{
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  },
+
+
   // Define the 'title' field
   title: {
     type: String, // Field data type is String
