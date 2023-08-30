@@ -63,6 +63,7 @@ router.post('/userlogin',[
     body('email').trim().notEmpty().isEmail().withMessage('Not a valid e-mail address'),
     body('password', "Password must contain atleast 8 characters").trim().isLength({ min: 5 })
 ],async (req, res) => {
+    let success = false;
     const errors = validationResult(req); // Get validation errors from the request
     if (!errors.isEmpty()) {
         // If there are validation errors, return a response with the error details
@@ -78,7 +79,8 @@ router.post('/userlogin',[
         }
         const passwordCompare = await bcrypt.compare(password, user.password);
         if(!passwordCompare){
-            return res.status(400).json({error : "Enterd email or password is incorrect checkonce and enter again"})
+            success = false;
+            return res.status(400).json({success, error : "Enterd email or password is incorrect checkonce and enter again"})
         }
 
         const data = {
@@ -87,7 +89,8 @@ router.post('/userlogin',[
              }
          }
          const authToken = jwt.sign(data, JWT_SECRET) 
-         res.json({authToken});
+         success = true;
+         res.json({success, authToken});
 
     } catch (error) {
         console.error(error.message);

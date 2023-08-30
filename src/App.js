@@ -6,6 +6,8 @@ import About from './components/About';
 import AddingNotes from './components/AddingNotes';
 import NotesState from './context/notes/NotesState';
 import Alert from './components/Alert';
+import Login from './components/Login';
+import Signup from './components/Signup';
 
   function App() {
     return (
@@ -18,6 +20,8 @@ import Alert from './components/Alert';
               <Route exact path='/' element={<Home />} />
               <Route exact path='/about' element={<About />} />
               <Route exact path='/addnotform' element={<AddingNotes/>} />
+              <Route exact path='/login' element={<Login/>} />
+              <Route exact path='/signup' element={<Signup/>} />
             </Routes>
             </NotesState>
         </BrowserRouter>

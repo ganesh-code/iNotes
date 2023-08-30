@@ -52,7 +52,7 @@ export default function NotesState(props) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "your-auth-token",
+        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRkMDgzZWZmZGIyOGFjOTYxZDI5NDlkIn0sImlhdCI6MTY5MTM5NjgwNn0.cQnpk2fqt616Ptv9yaiIccdEHE8xIGfrfQoJnIDeTJs",
       },
       body: JSON.stringify({ title, description, tag }), // Sending updated data
     });
@@ -79,7 +79,7 @@ export default function NotesState(props) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "your-auth-token",
+        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRkMDgzZWZmZGIyOGFjOTYxZDI5NDlkIn0sImlhdCI6MTY5MTM5NjgwNn0.cQnpk2fqt616Ptv9yaiIccdEHE8xIGfrfQoJnIDeTJs",
       },
     });
     const json = response.json();
