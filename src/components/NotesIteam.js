@@ -15,8 +15,8 @@ export default function NotesIteam(props) {
         <p className="card-text">{note.description.slice(0,30)}</p>
         <h6 className="card-subtitle mb-2 text-body-secondary"><span className="badge bg-secondary">{note.tag}</span></h6>
         <p className="card-text"><small className="text-body-secondary">{note.date}</small></p>
-        <i className="fa-solid fa-trash fa-lg mx-2" onClick={()=>{deleteNote(note._id)}}></i>
-        <i className="fa-solid fa-file-pen fa-lg mx-2" onClick={()=>{updateNote(note)}} ></i>
+        <i className="fa-solid fa-trash fa-lg mx-2" onClick={()=>{deleteNote(note._id); props.showAlert('Deleted note Successfuly','success')}}></i>
+        <i className="fa-solid fa-file-pen fa-lg mx-2" onClick={()=>{updateNote(note); props.showAlert('Updated note Successfuly','success')}} ></i>
       </div>
     </div>
   )

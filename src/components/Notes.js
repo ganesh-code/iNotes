@@ -3,7 +3,7 @@ import NotesIteam from './NotesIteam'
 import NotesContext from '../context/notes/notesContext';
 import AddNotesBtn from './AddNotesBtn';
 
-export default function Sidebar(props) {
+export default function Notes(props) {
     // Get the notes context
     const context = useContext(NotesContext);
     // Destructure necessary functions from the context
@@ -38,11 +38,12 @@ export default function Sidebar(props) {
     const handleAdd = (e) => {
         editNote(note.id, note.etitle, note.edescription, note.etag)
         refClose.current.click();
+        props.showAlert('Updated note Successfuly','success')
     }
 
     return (
         <div>
-            <AddNotesBtn />
+            <AddNotesBtn showAlert={props.showAlert} />
             <button style={{ position: 'absolute', display: 'none' }} ref={ref} type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Launch demo modal
             </button>
@@ -84,7 +85,7 @@ export default function Sidebar(props) {
             <div className='m-0 p-5 row g-md-3'>
                 {/* Display list of notes */}
                 {notes.map((note) => {
-                    return <NotesIteam key={note._id} updateNote={updateNote} note={note} />;
+                    return <NotesIteam key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />;
                 })}
             </div>
         </div>
