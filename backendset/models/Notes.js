@@ -10,8 +10,6 @@ const NotesSchema = new Schema({
     type : mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-
-
   // Define the 'title' field
   title: {
     type: String, // Field data type is String

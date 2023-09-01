@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import NotesIteam from './NotesIteam'
 import NotesContext from '../context/notes/notesContext';
 import AddNotesBtn from './AddNotesBtn';
+import { useNavigate } from 'react-router-dom';
 
 export default function Notes(props) {
     // Get the notes context
@@ -9,10 +10,18 @@ export default function Notes(props) {
     // Destructure necessary functions from the context
     const { notes, getNote, editNote } = context
     // Load notes when the component mounts
+    const navigate = useNavigate();
+    // Load notes when the component mounts
     useEffect(() => {
-        getNote();
+        const isAuthenticated = localStorage.getItem('token');
+        if (isAuthenticated) {
+            getNote();
+        } else {
+            navigate('/login');
+        }
         // eslint-disable-next-line
     }, [])
+
     // Destructure addNote function from the context
     const { addNote } = context
     // Refs for interacting with the modal
@@ -38,7 +47,7 @@ export default function Notes(props) {
     const handleAdd = (e) => {
         editNote(note.id, note.etitle, note.edescription, note.etag)
         refClose.current.click();
-        props.showAlert('Updated note Successfuly','success')
+        props.showAlert('Updated note Successfuly', 'success')
     }
 
     return (
@@ -84,10 +93,15 @@ export default function Notes(props) {
             </div>
             <div className='m-0 p-5 row g-md-3'>
                 {/* Display list of notes */}
-                {notes.map((note) => {
-                    return <NotesIteam key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />;
-                })}
+                {Array.isArray(notes) && notes.length > 0 ? (
+                    notes.map((note) => (
+                        <NotesIteam key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
+                    ))
+                ) : (
+                    <p>No notes available</p>
+                )}
             </div>
+
         </div>
     )
 }

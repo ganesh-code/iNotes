@@ -13,7 +13,7 @@ export default function NotesState(props) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRkMDgzZWZmZGIyOGFjOTYxZDI5NDlkIn0sImlhdCI6MTY5MTM5NjgwNn0.cQnpk2fqt616Ptv9yaiIccdEHE8xIGfrfQoJnIDeTJs",
+        "auth-token":localStorage.getItem('token'),
       },
     });
     const json = await response.json(); // Parsing the response JSON
@@ -27,21 +27,22 @@ export default function NotesState(props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRkMDgzZWZmZGIyOGFjOTYxZDI5NDlkIn0sImlhdCI6MTY5MTM5NjgwNn0.cQnpk2fqt616Ptv9yaiIccdEHE8xIGfrfQoJnIDeTJs",
+        "auth-token": localStorage.getItem('token')
       },
       body: JSON.stringify({ title, description, tag }), // Sending data in JSON format
     });
-    const json = response.json();
+    const json = await response.json();
     // Creating a new note object based on the added note
     const note = {
       "_id": "j",
       "user": "64d083effdb28ac961d2949d",
-      "title": title.slice(0, 10),
-      "description": description.slice(0, 25),
+      "title": title,
+      "description": description,
       "tag": tag,
       "date": "2023-08-09T06:07:41.825Z",
       "__v": 0
     }
+    console.log('Current notes:', notes);
     setNotes(notes.concat(note)); // Adding the new note to the state
   }
 
@@ -52,11 +53,11 @@ export default function NotesState(props) {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRkMDgzZWZmZGIyOGFjOTYxZDI5NDlkIn0sImlhdCI6MTY5MTM5NjgwNn0.cQnpk2fqt616Ptv9yaiIccdEHE8xIGfrfQoJnIDeTJs",
+        "auth-token": localStorage.getItem('token')
       },
       body: JSON.stringify({ title, description, tag }), // Sending updated data
     });
-    const json = response.json();
+    const json =  await response.json();
     
     // Updating the state to reflect the edited note
     let newNote2 = JSON.parse(JSON.stringify(notes));
@@ -79,10 +80,10 @@ export default function NotesState(props) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjRkMDgzZWZmZGIyOGFjOTYxZDI5NDlkIn0sImlhdCI6MTY5MTM5NjgwNn0.cQnpk2fqt616Ptv9yaiIccdEHE8xIGfrfQoJnIDeTJs",
+        "auth-token": localStorage.getItem('token')
       },
     });
-    const json = response.json();
+    const json = await response.json();
     
     // Updating the state to remove the deleted note
     const newNote = notes.filter((note) => note._id !== id);

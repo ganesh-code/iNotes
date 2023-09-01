@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 export default function Login(props) {
+    const [showPassword, setShowPassword] = useState(false);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     let history = useNavigate();
 
@@ -16,12 +17,12 @@ export default function Login(props) {
         });
         const json = await response.json();
         console.log(json);
-        if(json.success){
+        if (json.success) {
             //save the authtoken and redirect
-            localStorage.setItem('token', json.authtoken)
+            localStorage.setItem('token', json.authToken)
+            props.showAlert('Login Success', 'success')
             history('/')
-            props.showAlert('Login Success','success')
-        }else{
+        } else {
             props.showAlert(json.error, "danger")
         }
     };
@@ -39,10 +40,26 @@ export default function Login(props) {
                     <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" value={credentials.password} onChange={onChange} id="password" name='password' />
-                    <div id="passwordHelpBlock" className="form-text">
-                        Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    <label htmlFor="password" className="form-label">
+                        Password
+                    </label>
+                    <div className="input-group">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            className="form-control"
+                            onChange={onChange}
+                            id="password"
+                            required
+                            minLength={8}
+                        />
+                        <button
+                            className="btn btn-outline-secondary"
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
                     </div>
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
