@@ -52,7 +52,7 @@ export default function Register(props) {
     };
 
     return (
-        <div className="container m-5">
+        <div className='container p-5'>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">
@@ -61,7 +61,7 @@ export default function Register(props) {
                     <input
                         type="text"
                         name="name"
-                        className="form-control"
+                        className={`form-control bg-${props.theme} text-${props.text}`}
                         onChange={onChange}
                         id="name"
                         aria-describedby="nameHelp"
@@ -75,13 +75,13 @@ export default function Register(props) {
                     <input
                         type="email"
                         name="email"
-                        className="form-control"
+                        className={`form-control bg-${props.theme} text-${props.text}`}
                         onChange={onChange}
                         id="email"
                         aria-describedby="emailHelp"
                         required
                     />
-                    <div id="emailHelp" className="form-text">
+                    <div id="emailHelp" className={`form-text text-${props.text}`}>
                         We'll never share your email with anyone else.
                     </div>
                 </div>
@@ -93,7 +93,7 @@ export default function Register(props) {
                         <input
                             type={showPassword ? "text" : "password"}
                             name="password"
-                            className="form-control"
+                            className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
                             id="password"
                             required
@@ -116,7 +116,7 @@ export default function Register(props) {
                         <input
                             type={showConfPassword ? "text" : "password"}
                             name="confpassword"
-                            className="form-control"
+                            className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
                             id="confPassword"
                             required

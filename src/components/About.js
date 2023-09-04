@@ -7,7 +7,7 @@ export default function About() {
     <div className='container'>
       <h1 className='my-4'>About</h1>
       <h3 className='my-5'>MERN (MongoDB, Express.js, React, Node.js) stack application</h3>
-      <p>Building a MERN (MongoDB, Express.js, React, Node.js) stack application for storing notes in the cloud is a great way to learn how to create a full-stack web application. Below, I'll outline the steps and components you'll need to create such an application:
+      <p>Building a MERN (MongoDB, Express.js, React, Node.js) stack application for storing notes in the cloud is a great way to learn how to create a full-stack web application. Below, I'll outline the steps and components you'll need to create such an application:</p>
 
         <h4 className="my-3">1. Project Setup:</h4>
 
@@ -36,7 +36,7 @@ export default function About() {
         <p>- User Profile: Create a user profile page displaying user information.</p>
         <p> - Password Reset: Implement a password reset feature with email verification.</p>
         <p>- Authentication Middleware: Protect routes that require authentication.</p>
-        Building a MERN stack notes app with cloud storage is a comprehensive project that covers various aspects of web development, including backend and frontend development, authentication, cloud integration, and more. It's a valuable learning experience for developers looking to enhance their full-stack development skills.</p>
+       <p> Building a MERN stack notes app with cloud storage is a comprehensive project that covers various aspects of web development, including backend and frontend development, authentication, cloud integration, and more. It's a valuable learning experience for developers looking to enhance their full-stack development skills.</p>
     </div>
   )
 }

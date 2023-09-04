@@ -31,6 +31,7 @@ export default function NotesState(props) {
       },
       body: JSON.stringify({ title, description, tag }), // Sending data in JSON format
     });
+    // eslint-disable-next-line
     const json = await response.json();
     // Creating a new note object based on the added note
     const note = {
@@ -42,7 +43,7 @@ export default function NotesState(props) {
       "date": "2023-08-09T06:07:41.825Z",
       "__v": 0
     }
-    console.log('Current notes:', notes);
+    // console.log('Current notes:', notes);
     setNotes(notes.concat(note)); // Adding the new note to the state
   }
 
@@ -57,6 +58,7 @@ export default function NotesState(props) {
       },
       body: JSON.stringify({ title, description, tag }), // Sending updated data
     });
+   // eslint-disable-next-line 
     const json =  await response.json();
     
     // Updating the state to reflect the edited note
@@ -83,6 +85,7 @@ export default function NotesState(props) {
         "auth-token": localStorage.getItem('token')
       },
     });
+    // eslint-disable-next-line
     const json = await response.json();
     
     // Updating the state to remove the deleted note

@@ -52,13 +52,13 @@ export default function Notes(props) {
 
     return (
         <div>
-            <AddNotesBtn showAlert={props.showAlert} />
+            <AddNotesBtn theme={props.theme} showAlert={props.showAlert} />
             <button style={{ position: 'absolute', display: 'none' }} ref={ref} type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Launch demo modal
             </button>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
-                    <div className="modal-content">
+                    <div className={`modal-content bg-${props.theme}`}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel">Update Notes</h1>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -67,13 +67,13 @@ export default function Notes(props) {
                             <form>
                                 <div className="mb-3">
                                     <label htmlFor="title" className="form-label">Title</label>
-                                    <input type="text" name='etitle' value={note.etitle} className="form-control" id="etitle" onChange={onChange} placeholder="title..." />
+                                    <input type="text" name='etitle' value={note.etitle} className={`form-select mb-5 bg-${props.theme} text-${props.text}`} id="etitle" onChange={onChange} placeholder="title..." />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description</label>
-                                    <textarea className="form-control" value={note.edescription} name='edescription' onChange={onChange} id="edescription" rows="3"></textarea>
+                                    <textarea className={`form-select mb-5 bg-${props.theme} text-${props.text}`} value={note.edescription} name='edescription' onChange={onChange} id="edescription" rows="3"></textarea>
                                 </div>
-                                <select className="form-select mb-5" id='etag' name='etag' value={note.etag} onChange={onChange} aria-label="Default select example">
+                                <select className={`form-select mb-5 bg-${props.theme} text-${props.text}`} id='etag' name='etag' value={note.etag} onChange={onChange} aria-label="Default select example">
                                     <option value=''>Tag</option>
                                     <option value="General">General</option>
                                     <option value="Education">Education</option>
@@ -91,11 +91,11 @@ export default function Notes(props) {
                     </div>
                 </div>
             </div>
-            <div className='m-0 p-5 row g-md-3'>
+            <div className='row m-0'>
                 {/* Display list of notes */}
                 {Array.isArray(notes) && notes.length > 0 ? (
                     notes.map((note) => (
-                        <NotesIteam key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
+                        <NotesIteam key={note._id} theme={props.theme} text={props.text} updateNote={updateNote} showAlert={props.showAlert} note={note} />
                     ))
                 ) : (
                     <p>No notes available</p>

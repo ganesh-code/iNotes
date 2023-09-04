@@ -13,7 +13,7 @@ async function connectToMongo() {
             useUnifiedTopology: true, // Use new Server Discovery and Monitoring engine
         });
 
-        console.log('Connected to MongoDB'); // Log a success message if the connection is successful
+        // console.log('Connected to MongoDB'); // Log a success message if the connection is successful
     } catch (error) {
         // If an error occurs during the connection attempt, handle the error
         console.error('Error connecting to MongoDB:', error.message);

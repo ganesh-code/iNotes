@@ -16,7 +16,7 @@ export default function Login(props) {
             body: JSON.stringify({ email: credentials.email, password: credentials.password }), // Sending data in JSON format
         });
         const json = await response.json();
-        console.log(json);
+        // console.log(json);
         if (json.success) {
             //save the authtoken and redirect
             localStorage.setItem('token', json.authToken)
@@ -32,22 +32,22 @@ export default function Login(props) {
     };
 
     return (
-        <div className='container m-5'>
+        <div className='container p-5'>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>
-                    <input type="email" className="form-control" value={credentials.email} onChange={onChange} id="email" name='email' aria-describedby="emailHelp" />
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+                    <input type="email" className={`form-control bg-${props.theme} text-${props.text}`} value={credentials.email} onChange={onChange} id="email" name='email' aria-describedby="emailHelp" />
+                    <div id="emailHelp" className={`form-text text-${props.text}`}>We'll never share your email with anyone else.</div>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
+                    <label htmlFor="password" className="form-label" >
                         Password
                     </label>
                     <div className="input-group">
                         <input
                             type={showPassword ? "text" : "password"}
                             name="password"
-                            className="form-control"
+                            className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
                             id="password"
                             required
