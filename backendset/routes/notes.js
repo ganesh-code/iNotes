@@ -58,14 +58,18 @@ router.put('/updatenote/:id', fetchuser, async function (req, res) {
 
         //find note to be updated
         let note  = await Note.findById(req.params.id);
-        if(!note){return res.status(404).send('Not found')};
-        if(note.user.toString() !== req.user.id){
-            return res.send(401).send('Not allowed')
+        if (!note) {
+            return res.status(404).send('Not found');
         }
+        
+        if (note.user.toString() !== req.user.id) {
+            return res.status(401).send('Not allowed');
+        }
+        
         note = await Note.findByIdAndUpdate(req.params.id, {$set : newNote}, {new : true} );
         res.json({note})
     } catch (error) {
-        console.error(error.message);
+        console.log(error);
         res.status(500).json({ error: "Internal server error" });
     }
 })

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register(props) {
     const [showPassword, setShowPassword] = useState(false);
@@ -136,6 +136,8 @@ export default function Register(props) {
                     Submit
                 </button>
             </form>
+            <p className='mt-5'>I Already have an Account? <Link to='/login'>Login</Link></p>
+
         </div>
     );
 }

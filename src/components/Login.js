@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login(props) {
     const [showPassword, setShowPassword] = useState(false);
@@ -64,6 +64,8 @@ export default function Login(props) {
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
+
+            <p className='mt-5'>I Don't have Account? <Link to='/signup'>SignUp</Link></p>
         </div>
     );
 }

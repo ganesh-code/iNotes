@@ -10,7 +10,7 @@ export default function NotesIteam(props) {
   const { note, updateNote } = props;
   return (
     <div className={`col my-3 mx-3 p-0`}>
-      <div class={`card m-0 bg-${props.theme} text-${props.text}`}>
+      <div className={`card m-0 bg-${props.theme} text-${props.text}`}>
         <div className="card-body">
           <h5 className="card-title">{note.title.slice(0, 15)}</h5>
           <p className="card-text">{note.description.slice(0, 25)}</p>
