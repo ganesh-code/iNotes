@@ -3,19 +3,31 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import NotesContext from '../context/notes/notesContext';
 
 export default function EditNote(props) {
+    // Get the 'id' parameter from the URL using the 'useParams' hook
     const { id } = useParams();
+    
+    // Use 'useNavigate' to programmatically navigate between routes
     const navigate = useNavigate();
+    
+    // Access the NotesContext to interact with the notes state
     const context = useContext(NotesContext);
-    const {notes, getNote, editNote } = context;
+    
+    // Destructure 'notes', 'getNote', and 'editNote' functions from the context
+    const { notes, getNote, editNote } = context;
+    
+    // Initialize state for the note being edited using 'useState'
     const [note, setNote] = useState({ etitle: '', edescription: '', etag: '' });
 
+    // Use 'useEffect' to load the specific note when the component mounts
     useEffect(() => {
-        // Load the specific note based on the ID from the URL params
+        // Call 'getNote' from the context to load notes
         getNote();
-        // Use find on the notes array from the context
+        
+        // Use 'find' to locate the specific note in the 'notes' array based on 'id'
         const selectedNote = notes.find((note) => note._id === id);
     
         if (selectedNote) {
+            // Update the 'note' state with the details of the selected note
             setNote({
                 id: selectedNote._id, // Set the ID to identify the note for editing
                 etitle: selectedNote.title,
@@ -26,17 +38,21 @@ export default function EditNote(props) {
         // eslint-disable-next-line
     }, []);
 
-    
-
+    // Function to handle input field changes and update 'note' state
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value });
     };
 
+    // Function to handle the update of the edited note
     const handleUpdate = () => {
+        // Call 'editNote' from the context with updated note details
         editNote(note.id, note.etitle, note.edescription, note.etag);
-        navigate('/'); // Navigate back to the home page after updating
-        props.showAlert('Updated note Successfuly', 'success')
-
+        
+        // Navigate back to the home page after updating
+        navigate('/');
+        
+        // Show a success alert using the 'props' passed to the component
+        props.showAlert('Updated note Successfully', 'success')
     };
 
     return (

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register(props) {
+    // State to manage password visibility
     const [showPassword, setShowPassword] = useState(false);
     const [showConfPassword, setShowConfPassword] = useState(false);
 
+    // State to manage form input values
     const [credentials, setCredentials] = useState({
         name: '',
         email: '',
@@ -12,17 +14,20 @@ export default function Register(props) {
         confPassword: '',
     });
 
+    // Use 'useNavigate' to programmatically navigate within the application
     const navigate = useNavigate();
 
+    // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Check if passwords match
-        if (credentials.password !== credentials.confpassword) {
+        if (credentials.password !== credentials.confPassword) {
             props.showAlert("Passwords didn't match", 'danger');
             return;
         }
 
+        // Send a POST request to create a new user account
         const response = await fetch('http://localhost:5500/api/auth/createuser', {
             method: 'POST',
             headers: {
@@ -38,15 +43,19 @@ export default function Register(props) {
         const json = await response.json();
 
         if (json.success) {
-            // Save the authToken and redirect
+            // Save the authentication token to local storage and show a success alert
             localStorage.setItem('token', json.authToken);
             props.showAlert('Account Created Successfully', 'success');
-            navigate('/'); // Redirect to the desired page after successful registration
+            
+            // Redirect to the desired page after successful registration
+            navigate('/');
         } else {
+            // Show an error alert if registration fails
             props.showAlert(json.error, 'danger');
         }
     };
 
+    // Function to handle changes in form input fields
     const onChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
@@ -91,7 +100,7 @@ export default function Register(props) {
                     </label>
                     <div className="input-group">
                         <input
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? "text" : "password"} // Toggle password visibility
                             name="password"
                             className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
@@ -102,9 +111,9 @@ export default function Register(props) {
                         <button
                             className="btn btn-outline-secondary"
                             type="button"
-                            onClick={() => setShowPassword(!showPassword)}
+                            onClick={() => setShowPassword(!showPassword)} // Toggle the password visibility state
                         >
-                            {showPassword ? "Hide" : "Show"}
+                            {showPassword ? "Hide" : "Show"} {/* Change the button text based on visibility */}
                         </button>
                     </div>
                 </div>
@@ -114,8 +123,8 @@ export default function Register(props) {
                     </label>
                     <div className="input-group">
                         <input
-                            type={showConfPassword ? "text" : "password"}
-                            name="confpassword"
+                            type={showConfPassword ? "text" : "password"} // Toggle password visibility
+                            name="confPassword"
                             className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
                             id="confPassword"
@@ -125,9 +134,9 @@ export default function Register(props) {
                         <button
                             className="btn btn-outline-secondary"
                             type="button"
-                            onClick={() => setShowConfPassword(!showConfPassword)}
+                            onClick={() => setShowConfPassword(!showConfPassword)} // Toggle the password visibility state
                         >
-                            {showConfPassword ? "Hide" : "Show"}
+                            {showConfPassword ? "Hide" : "Show"} {/* Change the button text based on visibility */}
                         </button>
                     </div>
                 </div>
@@ -136,8 +145,9 @@ export default function Register(props) {
                     Submit
                 </button>
             </form>
+            
+            {/* Link to the login page */}
             <p className='mt-5'>I Already have an Account? <Link to='/login'>Login</Link></p>
-
         </div>
     );
 }

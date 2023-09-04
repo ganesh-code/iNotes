@@ -2,12 +2,20 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login(props) {
+    // Use 'useState' to manage the visibility of the password input
     const [showPassword, setShowPassword] = useState(false);
+    
+    // Use 'useState' to manage the form input values
     const [credentials, setCredentials] = useState({ email: '', password: '' });
+    
+    // Use 'useNavigate' for programmatic navigation within the application
     let history = useNavigate();
 
+    // Function to handle form submission
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default form submission behavior
+        
+        // Send a POST request to the server for user login
         const response = await fetch('http://localhost:5500/api/auth/userlogin', {
             method: "POST",
             headers: {
@@ -15,18 +23,20 @@ export default function Login(props) {
             },
             body: JSON.stringify({ email: credentials.email, password: credentials.password }), // Sending data in JSON format
         });
-        const json = await response.json();
-        // console.log(json);
+        
+        const json = await response.json(); // Parse the JSON response
+        
         if (json.success) {
-            //save the authtoken and redirect
-            localStorage.setItem('token', json.authToken)
-            props.showAlert('Login Success', 'success')
-            history('/')
+            // Save the authentication token to local storage and redirect to the home page
+            localStorage.setItem('token', json.authToken);
+            props.showAlert('Login Success', 'success'); // Show a success alert
+            history('/'); // Navigate to the home page
         } else {
-            props.showAlert(json.error, "danger")
+            props.showAlert(json.error, "danger"); // Show an error alert if login fails
         }
     };
 
+    // Function to handle changes in form input fields
     const onChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
@@ -45,7 +55,7 @@ export default function Login(props) {
                     </label>
                     <div className="input-group">
                         <input
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? "text" : "password"} // Toggle password visibility
                             name="password"
                             className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
@@ -56,16 +66,16 @@ export default function Login(props) {
                         <button
                             className="btn btn-outline-secondary"
                             type="button"
-                            onClick={() => setShowPassword(!showPassword)}
+                            onClick={() => setShowPassword(!showPassword)} // Toggle the password visibility state
                         >
-                            {showPassword ? "Hide" : "Show"}
+                            {showPassword ? "Hide" : "Show"} {/* Change the button text based on visibility */}
                         </button>
                     </div>
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
 
-            <p className='mt-5'>I Don't have Account? <Link to='/signup'>SignUp</Link></p>
+            <p className='mt-5'>I Don't have an Account? <Link to='/signup'>SignUp</Link></p>
         </div>
     );
 }
