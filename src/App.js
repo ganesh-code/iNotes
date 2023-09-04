@@ -10,6 +10,7 @@ import Alert from './components/Alert';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import EditNote from './components/EditNotes';
+import Error from './components/Error';
 
 function App() {
   const [alert, setAlert] = useState(null)
@@ -57,6 +58,7 @@ function App() {
             <Route exact path='/login' element={<Login theme={theme} text={text} showAlert={showAlert} />} />
             <Route exact path='/signup' element={<Signup theme={theme} text={text} showAlert={showAlert} />} />
             <Route path="/edit/:id" element={<EditNote  theme={theme} text={text} showAlert={showAlert}/>} />
+            <Route path='*' element={<Error/>}/>
           </Routes>
         </NotesState>
       </BrowserRouter>
