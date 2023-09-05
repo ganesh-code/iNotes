@@ -75,4 +75,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Special thanks to the open-source community for providing the tools and libraries used in this project.
-<img width="1440" alt="Screenshot 2023-09-05 at 12 35 59 PM" src="https://github.com/ganesh-code/iNotes/assets/120541706/07e3cfd5-00e9-4631-bacd-f51036c51ea1">
+#Preview
+<img width="1440" alt="Screenshot 2023-09-05 at 12 41 50 PM" src="https://github.com/ganesh-code/iNotes/assets/120541706/f969872c-ddef-43e2-bd75-5b3af04e659a">
