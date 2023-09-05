@@ -75,5 +75,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Special thanks to the open-source community for providing the tools and libraries used in this project.
-
-Feel free to customize this README to fit your specific project's details and requirements. Make sure to include any additional information or instructions that your users might need to successfully run and use your Cloud Notes application.
+<img width="1440" alt="Screenshot 2023-09-05 at 12 35 59 PM" src="https://github.com/ganesh-code/iNotes/assets/120541706/07e3cfd5-00e9-4631-bacd-f51036c51ea1">
