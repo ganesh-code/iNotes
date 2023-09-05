@@ -37,7 +37,7 @@ export default function Notes(props) {
     return (
         <div>
             <AddNotesBtn theme={props.theme} showAlert={props.showAlert} />
-            <div className='row m-0'>
+            <div className='col m-0'>
                 {Array.isArray(notes) && notes.length > 0 ? (
                     notes.map((note) => (
                         <NotesIteam
