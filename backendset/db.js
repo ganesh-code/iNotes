@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 // Define the MongoDB connection URI
-const mongoURI = "mongodb+srv://ganesh:7vpobKjupQwJgXUf@cluster0.kyaw8ee.mongodb.net/";
+const mongoURI = "mongodb://localhost:27017/iNotes?tls=false";
 
 // Define an asynchronous function to connect to the MongoDB database
 async function connectToMongo() {
