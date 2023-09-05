@@ -30,7 +30,7 @@ To run this application locally, follow these steps:
 1. Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/cloud-notes.git
+   git clone https://github.com/ganesh-code/cloud-notes.git
    ```
 
 2. Install the required dependencies for the server and client:
