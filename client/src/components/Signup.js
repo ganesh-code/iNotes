@@ -11,7 +11,7 @@ export default function Register(props) {
         name: '',
         email: '',
         password: '',
-        confPassword: '',
+        cPassword: '',
     });
 
     // Use 'useNavigate' to programmatically navigate within the application
@@ -22,7 +22,7 @@ export default function Register(props) {
         e.preventDefault();
 
         // Check if passwords match
-        if (credentials.password !== credentials.confPassword) {
+        if (credentials.password !== credentials.cPassword) {
             props.showAlert("Passwords didn't match", 'danger');
             return;
         }
@@ -37,12 +37,13 @@ export default function Register(props) {
                 name: credentials.name,
                 email: credentials.email,
                 password: credentials.password,
+                cPassword : credentials.cPassword
             }),
         });
         const json = await response.json();
-        console.log(json)
+        // console.log(json)
 
-        if (json.success) {
+        if (json.authToken) {
             // Save the authentication token to local storage and show a success alert
             localStorage.setItem('token', json.authToken);
             props.showAlert('Account Created Successfully', 'success');
@@ -51,7 +52,7 @@ export default function Register(props) {
             navigate('/');
         } else {
             // Show an error alert if registration fails
-            props.showAlert(json.error, 'danger');
+            props.showAlert('ERROR in Signup.js', 'danger');
         }
     };
 
@@ -124,7 +125,7 @@ export default function Register(props) {
                     <div className="input-group">
                         <input
                             type={showConfPassword ? "text" : "password"} // Toggle password visibility
-                            name="confPassword"
+                            name="cPassword"
                             className={`form-control bg-${props.theme} text-${props.text}`}
                             onChange={onChange}
                             id="confPassword"

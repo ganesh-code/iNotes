@@ -14,7 +14,7 @@ export default function NotesIteam(props) {
   const { note, updateNote } = props;
 
   return (
-    <div className={`col my-3 mx-3 p-0`}>
+    <div className={`col my-3 mx-3 p-0` } style={{width:'97vw'}}>
       <div className={`card m-0 bg-${props.theme} text-${props.text}`}>
         <div className="card-body">
           {/* Display the truncated title of the note */}

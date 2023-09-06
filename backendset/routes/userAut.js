@@ -17,13 +17,13 @@ router.post('/createuser', [
     body('email').trim().notEmpty().isEmail().withMessage('Not a valid e-mail address'),
     // Validate and sanitize the 'password' and 'confPassword' fields
     body('password').trim().isLength({ min: 8 }).withMessage('Password must have at least 8 characters'),
-    body('confpassword', 'password not match').trim().custom((value, { req }) => {
-        // Check if 'confPassword' matches 'password'
+    body('cPassword', 'Passwords do not match').trim().custom((value, { req }) => {
         if (value !== req.body.password) {
-            throw new Error('Passwords do not match');
+            throw new Error('Passwords must match');
         }
         return true;
     }),
+    
 ], async (req, res) => {
     const errors = validationResult(req); // Get validation errors from the request
     if (!errors.isEmpty()) {
@@ -63,7 +63,14 @@ router.post('/createuser', [
 // ROUTE 2: Define a route for user Login
 router.post('/userlogin', [
     body('email').trim().notEmpty().isEmail().withMessage('Not a valid e-mail address'),
-    body('password', "Password must contain at least 8 characters").trim().isLength({ min: 5 })
+    body('password', "Password must contain at least 8 characters").trim().isLength({ min: 5 }),
+    body('cPassword', 'Passwords do not match').trim().custom((value, { req }) => {
+        if (value !== req.body.password) {
+            throw new Error('Passwords must match');
+        }
+        return true;
+    }),
+    
 ], async (req, res) => {
     let success = false;
     const errors = validationResult(req); // Get validation errors from the request
