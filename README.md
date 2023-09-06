@@ -1,4 +1,4 @@
-# Cloud Notes - Store Your Notes in the Cloud
+# iNotes - Store Your Notes in the Cloud
 
 Cloud Notes is a web application that allows users to store and manage their notes securely in the cloud. With Cloud Notes, you can create, edit, and organize your notes, and they will be securely saved using MongoDB. Additionally, users can log in to ensure their notes remain private.
 
