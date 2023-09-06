@@ -50,7 +50,7 @@ export default function Notes(props) {
                         />
                     ))
                 ) : (
-                    <p>No notes available</p>
+                    <h1 className='position-absolute top-50 start-50 translate-middle'>No notes available</h1>
                 )}
             </div>
         </div>

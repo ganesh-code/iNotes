@@ -18,10 +18,10 @@ export default function NotesIteam(props) {
       <div className={`card m-0 bg-${props.theme} text-${props.text}`}>
         <div className="card-body">
           {/* Display the truncated title of the note */}
-          <h5 className="card-title">{note.title.slice(0, 15)}</h5>
+          <h5 className="card-title">{note.title}</h5>
           
           {/* Display the truncated description of the note */}
-          <p className="card-text">{note.description.slice(0, 25)}</p>
+          <p className="card-text">{note.description}</p>
           
           {/* Display the note's tag as a badge */}
           <h6 className="card-subtitle mb-2 text-body-secondary">

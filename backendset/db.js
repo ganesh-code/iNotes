@@ -1,8 +1,8 @@
 // Import the mongoose library for MongoDB interaction
 const mongoose = require("mongoose");
-
+const MONGO_URL = process.env.MONGO_URL
 // Define the MongoDB connection URI
-const mongoURI = "mongodb://localhost:27017/iNotes?tls=false";
+const mongoURI = MONGO_URL || "mongodb+srv://Inotes:tlf6rGAiOh9BaM14@cluster0.jsummbm.mongodb.net/"
 
 // Define an asynchronous function to connect to the MongoDB database
 async function connectToMongo() {
@@ -13,7 +13,7 @@ async function connectToMongo() {
             useUnifiedTopology: true, // Use new Server Discovery and Monitoring engine
         });
 
-        // console.log('Connected to MongoDB'); // Log a success message if the connection is successful
+         console.log('Connected to MongoDB'); // Log a success message if the connection is successful
     } catch (error) {
         // If an error occurs during the connection attempt, handle the error
         console.error('Error connecting to MongoDB:', error.message);

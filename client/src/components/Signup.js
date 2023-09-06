@@ -39,14 +39,14 @@ export default function Register(props) {
                 password: credentials.password,
             }),
         });
-
         const json = await response.json();
+        console.log(json)
 
         if (json.success) {
             // Save the authentication token to local storage and show a success alert
             localStorage.setItem('token', json.authToken);
             props.showAlert('Account Created Successfully', 'success');
-            
+
             // Redirect to the desired page after successful registration
             navigate('/');
         } else {
@@ -145,7 +145,7 @@ export default function Register(props) {
                     Submit
                 </button>
             </form>
-            
+
             {/* Link to the login page */}
             <p className='mt-5'>I Already have an Account? <Link to='/login'>Login</Link></p>
         </div>

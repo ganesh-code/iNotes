@@ -68,6 +68,7 @@ export default function EditNote(props) {
                     id="etitle"
                     onChange={onChange}
                     placeholder="Title..."
+                    style={{border:0, outline:'none'}}
                 />
             </div>
             <div className="mb-3">
@@ -79,6 +80,7 @@ export default function EditNote(props) {
                     onChange={onChange}
                     id="edescription"
                     rows="3"
+                    style={{border:0, outline:'none'}}
                 ></textarea>
             </div>
             <select
@@ -88,6 +90,8 @@ export default function EditNote(props) {
                 value={note.etag}
                 onChange={onChange}
                 aria-label="Default select example"
+                style={{border:0, outline:'none'}}
+
             >
                 <option value=''>Tag</option>
                 <option value="General">General</option>

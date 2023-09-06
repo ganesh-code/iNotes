@@ -21,5 +21,5 @@ app.use("/api/auth", require("./routes/userAut"));
 app.use("/api/notes", require("./routes/notes"));
 
 app.listen(port, ()=>{
-//  console.log(`Example app listening at http://localhost:${port}`)
+ console.log(`Example app listening at http://localhost:${port}`)
 });
