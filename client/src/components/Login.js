@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE } from '../config/api';
 
 export default function Login(props) {
     // Use 'useState' to manage the visibility of the password input
@@ -16,7 +17,7 @@ export default function Login(props) {
         e.preventDefault(); // Prevent the default form submission behavior
         
         // Send a POST request to the server for user login
-        const response = await fetch('http://localhost:5500/api/auth/userlogin', {
+        const response = await fetch(`${API_BASE}/api/auth/userlogin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

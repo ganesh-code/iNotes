@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import NotesContext from './notesContext';
+import { API_BASE } from '../../config/api';
 
 export default function NotesState(props) {
-  const host = 'http://localhost:5500'; // The API server's host URL
+  const host = API_BASE;
   const note1 = []; // Initial state for notes
   const [notes, setNotes] = useState(note1); // State to hold notes data
 

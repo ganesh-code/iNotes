@@ -1,0 +1,51 @@
+name: Deploy Backend to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backendset/**'
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: backendset
+        run: npm ci --only=production
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create deployment package
+        run: |
+          cd backendset
+          zip -r ../deploy.zip . -x "*.git*" -x "node_modules/*"
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ${{ secrets.EB_APP_NAME }}
+          environment_name: ${{ secrets.EB_ENV_NAME }}
+          region: ${{ secrets.AWS_REGION }}
+          version_label: "v${{ github.run_number }}"
+          deployment_package: deploy.zip
+
+      - name: Health Check
+        run: |
+          echo "✅ Backend deployed to Elastic Beanstalk!"
+          echo "Version: v${{ github.run_number }}"

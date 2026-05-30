@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./backendset
+    container_name: inotes-api
+    ports:
+      - "5500:5500"
+    env_file:
+      - ./backendset/.env
+    environment:
+      - NODE_ENV=development
+      - CLIENT_URL=http://localhost:3000
+    restart: unless-stopped
+    networks:
+      - inotes-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: inotes-client
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5500
+    volumes:
+      - ./client/src:/app/src
+    restart: unless-stopped
+    networks:
+      - inotes-network
+    depends_on:
+      - api
+
+networks:
+  inotes-network:
+    driver: bridge

@@ -1,69 +1,167 @@
-import './App.css';
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from './components/Navbar';
-import Home from './components/Home';
-import About from './components/About';
-import AddingNotes from './components/AddingNotes';
-import NotesState from './context/notes/NotesState';
-import Alert from './components/Alert';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import EditNote from './components/EditNotes';
-import Error from './components/Error';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { WorkspaceProvider } from './context/WorkspaceContext';
+import { PageProvider } from './context/PageContext';
+import Sidebar from './components/layout/Sidebar';
+import Topbar from './components/layout/Topbar';
+import SearchModal from './components/common/SearchModal';
+import './index.css';
 
-function App() {
-  const [alert, setAlert] = useState(null)
-  const showAlert = (message, type) => {
-    setAlert({
-      msg: message,
-      type: type
-    })
-    setTimeout(() => {
-      setAlert(null)
-    }, 1500)
-  }
+// Lazy-loaded pages
+const WorkspacePage = lazy(() => import('./components/pages/WorkspacePage'));
+const PageView = lazy(() => import('./components/pages/PageView'));
+const TrashPage = lazy(() => import('./components/pages/TrashPage'));
+const SettingsPage = lazy(() => import('./components/pages/SettingsPage'));
+const Login = lazy(() => import('./components/auth/Login'));
+const Signup = lazy(() => import('./components/auth/Signup'));
 
-  const [theme, setTheme] = useState("light");
-  const [icon, setIcon] = useState("moon");
-  const [text, setText] = useState("dark")
-
-  const toogleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-      setIcon("sun");
-      setText("light")
-      document.body.style.backgroundColor = '#181a1c';
-      document.body.style.color = 'white';
-    } else {
-      setTheme("light")
-      setIcon("moon");
-      setText("dark")
-      document.body.style.backgroundColor = 'white';
-      document.body.style.color = 'black';
-
-    }
-  }
-
+function AppLoader() {
   return (
-    <>
-      <BrowserRouter>
-        <NotesState>
-          <Navbar theme={theme} icon={icon} toogleTheme={toogleTheme} />
-          <Alert alert={alert} />
-          <Routes>
-            <Route exact path='/' element={<Home theme={theme} text={text} showAlert={showAlert} />} />
-            <Route exact path='/about' element={<About theme={theme} text={text} />} />
-            <Route exact path='/addnotform' element={<AddingNotes theme={theme} text={text} showAlert={showAlert} />} />
-            <Route exact path='/login' element={<Login theme={theme} text={text} showAlert={showAlert} />} />
-            <Route exact path='/signup' element={<Signup theme={theme} text={text} showAlert={showAlert} />} />
-            <Route path="/edit/:id" element={<EditNote  theme={theme} text={text} showAlert={showAlert}/>} />
-            <Route path='*' element={<Error/>}/>
-          </Routes>
-        </NotesState>
-      </BrowserRouter>
-    </>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-primary)', gap: '12px' }}>
+      <div style={{ fontSize: '28px' }}>✨</div>
+      <span style={{ fontSize: '16px', color: 'var(--text-secondary)' }}>Loading iNotes…</span>
+    </div>
   );
 }
 
-export default App;
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <AppLoader />;
+  return user ? children : <Navigate to="/login" replace />;
+}
+
+function PublicRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <AppLoader />;
+  return user ? <Navigate to="/" replace /> : children;
+}
+
+function AppLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { user } = useAuth();
+
+  // Apply and listen for theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = () => {
+      const savedTheme = user?.preferences?.theme; // 'light', 'dark', or 'system'
+
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (savedTheme === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        // 'system' or loading (undefined) — follow OS
+        if (mediaQuery.matches) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      }
+    };
+
+    applyTheme();
+
+    // Listen for OS theme changes
+    const handler = () => applyTheme();
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, [user?.preferences?.theme]);
+
+
+  // Cmd+K / Ctrl+K handler
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, []);
+
+  return (
+    <WorkspaceProvider>
+      <PageProvider>
+        <div className="app-layout">
+          <Sidebar
+            collapsed={!sidebarOpen}
+            onToggle={() => setSidebarOpen(false)}
+            onSearchOpen={() => setSearchOpen(true)}
+          />
+
+          {/* Sidebar open button when collapsed */}
+          {!sidebarOpen && (
+            <button
+              className="sidebar-toggle-btn"
+              onClick={() => setSidebarOpen(true)}
+              title="Open sidebar"
+            >
+              →
+            </button>
+          )}
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', width: 0 }}>
+            <Topbar
+              onToggleSidebar={() => setSidebarOpen(prev => !prev)}
+              onSearchOpen={() => setSearchOpen(true)}
+            />
+
+            <Suspense fallback={<AppLoader />}>
+              <Routes>
+                <Route path="/" element={<WorkspacePage />} />
+                <Route path="/page/:pageId" element={<PageView />} />
+                <Route path="/trash" element={<TrashPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </Routes>
+            </Suspense>
+          </div>
+
+          {searchOpen && (
+            <SearchModal onClose={() => setSearchOpen(false)} />
+          )}
+        </div>
+      </PageProvider>
+    </WorkspaceProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: 'var(--bg-primary)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-medium)',
+              boxShadow: 'var(--shadow-lg)',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '14px',
+              borderRadius: '8px',
+            },
+          }}
+        />
+        <Suspense fallback={<AppLoader />}>
+          <Routes>
+            {/* Auth routes (no sidebar) */}
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+
+            {/* App routes (with sidebar) */}
+            <Route path="/*" element={<PrivateRoute><AppLayout /></PrivateRoute>} />
+          </Routes>
+        </Suspense>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}

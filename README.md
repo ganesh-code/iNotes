@@ -1,79 +1,118 @@
-# iNotes - Store Your Notes in the Cloud
+# iNotes
 
-Cloud Notes is a web application that allows users to store and manage their notes securely in the cloud. With Cloud Notes, you can create, edit, and organize your notes, and they will be securely saved using MongoDB. Additionally, users can log in to ensure their notes remain private.
+iNotes is a Notion-inspired notes and knowledge workspace app. It includes authentication, workspace management, page hierarchy, rich-text editing, favorites, trash/restore, and search.
 
-## Features
+## Current Product Scope
 
-- User Registration and Login: Users can create an account, log in, and securely manage their notes.
-- Create Notes: Easily create new notes with a title and content.
-- Edit Notes: Make changes to your notes whenever you need to.
-- Delete Notes: Remove unwanted notes from your collection.
-- Secure Storage: Notes are securely stored in a MongoDB database, ensuring the safety of your data.
-- Private Notes: Your notes are only accessible to you once you log in.
+- User signup, login, logout, and profile update
+- JWT access token + refresh token flow
+- Multiple workspaces per user
+- Pages and nested sub-pages
+- Rich editor content per page
+- Starred pages, trash, restore, and permanent delete
+- Workspace/page search
 
-## Technologies Used
+## Project Structure
 
-- **React**: The front-end of the application is built using React.js, a popular JavaScript library for building user interfaces.
+- `backendset/` - Express + MongoDB API
+- `client/` - React application (workspace + page UI)
+- `mongodbExample.js` - MongoDB CRUD example script
+- `mongodbPing.js` - MongoDB connectivity check script
 
-- **Node.js**: The back-end of the application is powered by Node.js, allowing for efficient server-side logic.
+## Tech Stack
 
-- **Express.js**: Express.js is used to create a robust and efficient API for communication between the front-end and back-end.
+- Frontend: React, React Router, TipTap editor
+- Backend: Node.js, Express, Mongoose, JWT, Express Validator
+- Database: MongoDB Atlas
+- Security/ops middleware: helmet, cors, cookie-parser, morgan, rate limiting
 
-- **MongoDB**: MongoDB is the database used for storing and managing user notes.
+## Local Development Setup
 
-- **Authentication**: User authentication is implemented to ensure private access to notes.
+### 1) Install dependencies
 
-## Getting Started
+```bash
+cd backendset && npm install
+cd ../client && npm install
+```
 
-To run this application locally, follow these steps:
+### 2) Configure environment
 
-1. Clone the repository to your local machine:
+Create `backendset/.env`:
 
-   ```bash
-   git clone https://github.com/ganesh-code/cloud-notes.git
-   ```
+```env
+MONGO_URL=mongodb+srv://<username>:<url-encoded-password>@<cluster>/<dbname>?retryWrites=true&w=majority
+JWT_SECRET=replace_with_strong_secret
+JWT_REFRESH_SECRET=replace_with_another_strong_secret
+CLIENT_URL=http://localhost:3000
+PORT=5500
+NODE_ENV=development
+```
 
-2. Install the required dependencies for the server and client:
+Notes:
+- Do not add spaces around `=`.
+- URL-encode special characters in MongoDB password.
+- Never commit real secrets.
 
-   ```bash
-   cd cloud-notes
-   npm install
-   cd client
-   npm install
-   ```
+### 3) Run backend
 
-3. Configure your MongoDB database connection by setting the appropriate environment variables or updating the database configuration file.
+```bash
+cd backendset
+npm start
+```
 
-4. Start the server and client applications:
+Expected logs:
+- `Example app listening at http://localhost:5500`
+- `Connected to MongoDB`
 
-   ```bash
-   # From the root directory
-   npm start
+### 4) Configure frontend API URL
 
-   # From the client directory
-   npm start
-   ```
+The React app reads **`REACT_APP_API_URL`** only from environment files (see [client/src/config/api.js](client/src/config/api.js)). Do not hardcode API hosts in components.
 
-5. Open your web browser and navigate to `http://localhost:3000` to access the Cloud Notes application.
+- Local dev: [client/.env.development](client/.env.development) sets `REACT_APP_API_URL=http://localhost:5500` (used by `npm start`).
+- Production build: set `REACT_APP_API_URL` in CI or `client/.env.production` before `npm run build` (GitHub Actions uses `secrets.API_URL`).
+- Copy [client/.env.example](client/.env.example) if you need a template.
 
-## Usage
+### 5) Run frontend
 
-1. Register for an account or log in if you already have one.
+```bash
+cd client
+npm start
+```
 
-2. Once logged in, you can create new notes, edit existing ones, or delete notes as needed.
+App URL: `http://localhost:3000`
 
-3. Your notes are securely stored in the cloud and are only accessible when you are logged in.
+## API Overview
 
-## Contributing
+Mounted base routes:
+- `/api/auth`
+- `/api/notes` (legacy notes endpoints)
+- `/api/workspaces`
+- `/api/pages`
+- `/health`
 
-We welcome contributions from the community! If you'd like to contribute to Cloud Notes, please follow our [Contribution Guidelines](CONTRIBUTING.md).
+## Production and AWS Direction
+
+Target deployment for production:
+- Frontend: S3 + CloudFront
+- Backend API: ECS Fargate (or Elastic Beanstalk/App Runner)
+- Database: MongoDB Atlas
+- Secrets: AWS Secrets Manager / SSM Parameter Store
+- DNS + TLS: Route 53 + ACM
+- Logging/metrics: CloudWatch
+
+## Production Hardening Checklist
+
+- Remove all hardcoded fallback secrets and fallback Mongo URI
+- Move all secrets to managed secret storage
+- Add refresh token rotation/revocation strategy
+- Tighten input validation for pages/workspaces payloads
+- Add API and integration tests for critical flows
+- Add CI/CD pipeline for build, test, and deploy
+
+## Security Note
+
+If any password or connection string was exposed during setup, rotate those credentials immediately in MongoDB Atlas.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Special thanks to the open-source community for providing the tools and libraries used in this project.
-#Preview
-<img width="1440" alt="Screenshot 2023-09-05 at 12 41 50 PM" src="https://github.com/ganesh-code/iNotes/assets/120541706/f969872c-ddef-43e2-bd75-5b3af04e659a">
+MIT

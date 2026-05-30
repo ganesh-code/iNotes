@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE } from '../config/api';
 
 export default function Register(props) {
     // State to manage password visibility
@@ -28,7 +29,7 @@ export default function Register(props) {
         }
 
         // Send a POST request to create a new user account
-        const response = await fetch('http://localhost:5500/api/auth/createuser', {
+        const response = await fetch(`${API_BASE}/api/auth/createuser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
