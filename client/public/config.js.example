@@ -1,0 +1,4 @@
+// Copy or generate via: node scripts/generate-client-config.js
+window.INOTES_CONFIG = {
+  "API_URL": "https://your-api.example.com"
+};

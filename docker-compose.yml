@@ -7,10 +7,9 @@ services:
     ports:
       - "5500:5500"
     env_file:
-      - ./backendset/.env
+      - .env
     environment:
       - NODE_ENV=development
-      - CLIENT_URL=http://localhost:3000
     restart: unless-stopped
     networks:
       - inotes-network
@@ -22,8 +21,8 @@ services:
     container_name: inotes-client
     ports:
       - "3000:3000"
-    environment:
-      - REACT_APP_API_URL=http://localhost:5500
+    env_file:
+      - .env
     volumes:
       - ./client/src:/app/src
     restart: unless-stopped

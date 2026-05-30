@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inotes-api
+  namespace: inotes
+  labels:
+    app: inotes-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inotes-api
+  template:
+    metadata:
+      labels:
+        app: inotes-api
+    spec:
+      containers:
+        - name: api
+          image: inotes-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5500
+          envFrom:
+            - secretRef:
+                name: inotes-secrets
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: USE_AWS_SECRETS
+              value: "true"
+            - name: AWS_SECRETS_MANAGER_SECRET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: inotes-secrets
+                  key: AWS_SECRETS_MANAGER_SECRET_ID
+                  optional: true
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: inotes-secrets
+                  key: AWS_REGION
+                  optional: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5500
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5500
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

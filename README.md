@@ -14,10 +14,20 @@ iNotes is a Notion-inspired notes and knowledge workspace app. It includes authe
 
 ## Project Structure
 
-- `backendset/` - Express + MongoDB API
-- `client/` - React application (workspace + page UI)
-- `mongodbExample.js` - MongoDB CRUD example script
-- `mongodbPing.js` - MongoDB connectivity check script
+```
+iNotes/
+├── .github/workflows/   # CI/CD
+├── backendset/          # Express + MongoDB API
+├── client/              # React SPA
+├── docs/                # Documentation
+├── scripts/             # Utilities (config gen, MongoDB checks)
+├── k8s/                 # Kubernetes manifests
+├── .env.example
+├── docker-compose.yml
+└── README.md
+```
+
+See [docs/STRUCTURE.md](docs/STRUCTURE.md) for details.
 
 ## Tech Stack
 
@@ -35,23 +45,28 @@ cd backendset && npm install
 cd ../client && npm install
 ```
 
-### 2) Configure environment
+### 2) Configure environment (single root `.env`)
 
-Create `backendset/.env`:
+All variables for the API and React app live in one file at the **repository root**:
 
-```env
-MONGO_URL=mongodb+srv://<username>:<url-encoded-password>@<cluster>/<dbname>?retryWrites=true&w=majority
-JWT_SECRET=replace_with_strong_secret
-JWT_REFRESH_SECRET=replace_with_another_strong_secret
-CLIENT_URL=http://localhost:3000
-PORT=5500
-NODE_ENV=development
+```bash
+cp .env.example .env
+# Edit .env with your MongoDB URI, JWT secrets, and API URL
 ```
+
+| Variable | Used by |
+|----------|---------|
+| `MONGO_URL` | Backend API, `scripts/mongodb-ping.js` |
+| `JWT_SECRET`, `JWT_REFRESH_SECRET` | Backend auth |
+| `PORT`, `NODE_ENV`, `CLIENT_URL` | Backend server / CORS |
+| `API_URL` | Public backend URL (same as API in most setups) |
+| `REACT_APP_API_URL` | React build + `client/public/config.js` |
+| `AWS_SECRETS_MANAGER_SECRET_ID` | Production: JSON secret in AWS (see [docs/AWS_SECRETS.md](docs/AWS_SECRETS.md)) |
 
 Notes:
 - Do not add spaces around `=`.
 - URL-encode special characters in MongoDB password.
-- Never commit real secrets.
+- Never commit `.env` (only `.env.example`).
 
 ### 3) Run backend
 
@@ -61,18 +76,10 @@ npm start
 ```
 
 Expected logs:
-- `Example app listening at http://localhost:5500`
+- `iNotes API server running at http://localhost:5500`
 - `Connected to MongoDB`
 
-### 4) Configure frontend API URL
-
-The React app reads **`REACT_APP_API_URL`** only from environment files (see [client/src/config/api.js](client/src/config/api.js)). Do not hardcode API hosts in components.
-
-- Local dev: [client/.env.development](client/.env.development) sets `REACT_APP_API_URL=http://localhost:5500` (used by `npm start`).
-- Production build: set `REACT_APP_API_URL` in CI or `client/.env.production` before `npm run build` (GitHub Actions uses `secrets.API_URL`).
-- Copy [client/.env.example](client/.env.example) if you need a template.
-
-### 5) Run frontend
+### 4) Run frontend
 
 ```bash
 cd client
@@ -96,14 +103,14 @@ Target deployment for production:
 - Frontend: S3 + CloudFront
 - Backend API: ECS Fargate (or Elastic Beanstalk/App Runner)
 - Database: MongoDB Atlas
-- Secrets: AWS Secrets Manager / SSM Parameter Store
+- Secrets: [AWS Secrets Manager](docs/AWS_SECRETS.md) (single JSON secret for URLs + DB + JWT)
 - DNS + TLS: Route 53 + ACM
 - Logging/metrics: CloudWatch
 
 ## Production Hardening Checklist
 
-- Remove all hardcoded fallback secrets and fallback Mongo URI
-- Move all secrets to managed secret storage
+- ~~Remove all hardcoded fallback secrets and fallback Mongo URI~~ (done for Mongo URI; JWT dev fallbacks remain for local only)
+- ~~Move all secrets to managed secret storage~~ (AWS Secrets Manager supported — see docs/AWS_SECRETS.md)
 - Add refresh token rotation/revocation strategy
 - Tighten input validation for pages/workspaces payloads
 - Add API and integration tests for critical flows

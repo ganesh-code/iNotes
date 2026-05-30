@@ -1,11 +1,13 @@
 // Import the mongoose library for MongoDB interaction
 const mongoose = require("mongoose");
-const MONGO_URL = process.env.MONGO_URL
-// Define the MongoDB connection URI
-const mongoURI = MONGO_URL || "mongodb+srv://Inotes:tlf6rGAiOh9BaM14@cluster0.jsummbm.mongodb.net/"
+const mongoURI = process.env.MONGO_URL;
 
 // Define an asynchronous function to connect to the MongoDB database
 async function connectToMongo() {
+    if (!mongoURI) {
+        console.error('Error connecting to MongoDB: MONGO_URL is not set in the root .env file');
+        return;
+    }
     try {
         // Use the mongoose.connect() method to establish a connection to MongoDB
         await mongoose.connect(mongoURI, {

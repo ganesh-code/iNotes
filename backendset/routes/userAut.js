@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
@@ -7,8 +6,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_change_in_prod';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'fallback_refresh_secret';
+const { getJwtSecret, getJwtRefreshSecret } = require('../config/appConfig');
 
 // Helper: Set Refresh Token Cookie
 const setRefreshTokenCookie = (res, token) => {
@@ -48,8 +46,8 @@ router.post('/createuser', [
     });
 
     const payload = { user: { id: user._id } };
-    const authToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' }); // Short-lived access
-    const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '30d' });
+    const authToken = jwt.sign(payload, getJwtSecret(), { expiresIn: '15m' });
+    const refreshToken = jwt.sign(payload, getJwtRefreshSecret(), { expiresIn: '30d' });
 
     setRefreshTokenCookie(res, refreshToken);
 
@@ -80,8 +78,8 @@ router.post('/userlogin', [
     if (!passwordCompare) return res.status(400).json({ error: 'Invalid email or password' });
 
     const payload = { user: { id: user._id } };
-    const authToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
-    const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '30d' });
+    const authToken = jwt.sign(payload, getJwtSecret(), { expiresIn: '15m' });
+    const refreshToken = jwt.sign(payload, getJwtRefreshSecret(), { expiresIn: '30d' });
 
     setRefreshTokenCookie(res, refreshToken);
 
@@ -108,9 +106,9 @@ router.post('/refresh-token', async (req, res) => {
     const refreshToken = req.cookies.jid;
     if (!refreshToken) return res.status(401).json({ error: 'Session expired' });
 
-    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+    const decoded = jwt.verify(refreshToken, getJwtRefreshSecret());
     const payload = { user: { id: decoded.user.id } };
-    const newAuthToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+    const newAuthToken = jwt.sign(payload, getJwtSecret(), { expiresIn: '15m' });
 
     res.json({ authToken: newAuthToken });
   } catch (error) {

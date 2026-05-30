@@ -20,16 +20,13 @@ jobs:
           cache: npm
           cache-dependency-path: client/package-lock.json
 
-      - name: Install dependencies
-        working-directory: client
+      - name: Install backend dependencies (for config scripts)
+        working-directory: backendset
         run: npm ci
 
-      - name: Build
+      - name: Install client dependencies
         working-directory: client
-        env:
-          REACT_APP_API_URL: ${{ secrets.API_URL }}
-          CI: false
-        run: npm run build
+        run: npm ci
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -38,6 +35,28 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Load configuration from AWS Secrets Manager
+        if: ${{ secrets.AWS_SECRETS_MANAGER_SECRET_ID != '' }}
+        env:
+          AWS_SECRETS_MANAGER_SECRET_ID: ${{ secrets.AWS_SECRETS_MANAGER_SECRET_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          USE_AWS_SECRETS: 'true'
+        run: node scripts/ci-load-aws-secrets.js
+
+      - name: Generate client config (without AWS)
+        if: ${{ secrets.AWS_SECRETS_MANAGER_SECRET_ID == '' }}
+        env:
+          REACT_APP_API_URL: ${{ secrets.API_URL }}
+          API_URL: ${{ secrets.API_URL }}
+        run: node scripts/generate-client-config.js
+
+      - name: Build
+        working-directory: client
+        env:
+          REACT_APP_API_URL: ${{ env.REACT_APP_API_URL || secrets.API_URL }}
+          CI: false
+        run: npm run build
+
       - name: Sync to S3
         run: |
           aws s3 sync client/build/ s3://${{ secrets.S3_BUCKET }} \
@@ -45,7 +64,6 @@ jobs:
             --cache-control "max-age=31536000,public" \
             --exclude "index.html" \
             --exclude "*.json"
-          # Upload HTML + JSON without long cache
           aws s3 sync client/build/ s3://${{ secrets.S3_BUCKET }} \
             --delete \
             --cache-control "no-cache,no-store,must-revalidate" \
