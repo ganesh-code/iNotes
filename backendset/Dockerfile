@@ -1,14 +1,13 @@
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine
+
 WORKDIR /app
+
 COPY package*.json ./
-RUN npm ci --only=production
+
+RUN npm install
+
 COPY . .
 
-# Production stage
-FROM node:18-alpine
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app .
 EXPOSE 5500
-CMD ["node", "index.js"]
+
+CMD ["npm", "start"]
