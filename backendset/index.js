@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const connectToMongo = require('./db');
-const { loadEnv, getAppConfig } = require('./config');
+const { loadEnv, isLocalDevOrigin } = require('./config');
 
 async function start() {
   const config = await loadEnv();
@@ -25,6 +25,9 @@ async function start() {
   app.use(cors({
     origin: (origin, callback) => {
       if (!origin || config.clientUrls.includes(origin)) return callback(null, true);
+      if (config.nodeEnv === 'development' && isLocalDevOrigin(origin)) {
+        return callback(null, true);
+      }
       callback(new Error(`CORS: origin ${origin} not allowed`));
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

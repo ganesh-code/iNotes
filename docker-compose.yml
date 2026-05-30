@@ -1,5 +1,8 @@
 services:
+<<<<<<< HEAD
 
+=======
+>>>>>>> 57c331d (Add Docker Compose setup for frontend and backend)
   backend:
     build:
       context: ./backendset
@@ -17,5 +20,10 @@ services:
       - "3000:3000"
     env_file:
       - .env
+<<<<<<< HEAD
+=======
+    environment:
+      - PORT=3000
+>>>>>>> 57c331d (Add Docker Compose setup for frontend and backend)
     depends_on:
       - backend

@@ -10,4 +10,8 @@ COPY . .
 
 EXPOSE 3000
 
+<<<<<<< HEAD
 CMD ["npm", "start"]
+=======
+CMD ["npm", "start"]
+>>>>>>> 57c331d (Add Docker Compose setup for frontend and backend)

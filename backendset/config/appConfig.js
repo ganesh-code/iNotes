@@ -1,5 +1,5 @@
 const DEV_API_URL = 'http://localhost:5500';
-const DEV_CLIENT_URLS = ['http://localhost:3000', 'http://localhost:3001'];
+const DEV_CLIENT_URLS = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5501'];
 
 function trimUrl(value) {
   if (value == null) return '';
@@ -12,6 +12,15 @@ function parseList(value) {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+function isLocalDevOrigin(origin) {
+  try {
+    const { hostname } = new URL(origin);
+    return hostname === 'localhost' || hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
 }
 
 function getAppConfig() {
@@ -64,5 +73,6 @@ module.exports = {
   getAppConfig,
   getJwtSecret,
   getJwtRefreshSecret,
+  isLocalDevOrigin,
   DEV_API_URL,
 };

@@ -1,6 +1,6 @@
 const { loadRootEnvFile } = require('./loadEnv');
 const { loadAwsSecrets } = require('./loadAwsSecrets');
-const { getAppConfig } = require('./appConfig');
+const { getAppConfig, isLocalDevOrigin } = require('./appConfig');
 
 function shouldLoadAwsSecrets() {
   if (process.env.USE_AWS_SECRETS === 'true') return true;
@@ -20,4 +20,4 @@ async function loadEnv() {
   return getAppConfig();
 }
 
-module.exports = { loadEnv, loadRootEnvFile, getAppConfig };
+module.exports = { loadEnv, loadRootEnvFile, getAppConfig, isLocalDevOrigin };
