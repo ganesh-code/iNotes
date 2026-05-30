@@ -44,7 +44,7 @@ async function loadAwsSecrets(options = {}) {
   try {
     parsed = JSON.parse(raw);
   } catch {
-    throw new Error(`Secret ${secretId} must be a JSON object (see docs/AWS_SECRETS.md)`);
+    throw new Error(`Secret ${secretId} must be a JSON object with MONGO_URL, JWT_SECRET, etc.`);
   }
 
   applySecretObject(parsed, options);

@@ -16,18 +16,15 @@ iNotes is a Notion-inspired notes and knowledge workspace app. It includes authe
 
 ```
 iNotes/
-├── .github/workflows/   # CI/CD
+├── .github/workflows/   # ci.yml
 ├── backendset/          # Express + MongoDB API
 ├── client/              # React SPA
-├── docs/                # Documentation
-├── scripts/             # Utilities (config gen, MongoDB checks)
-├── k8s/                 # Kubernetes manifests
+├── docs/                # (empty — reserved)
+├── k8s/                 # (empty — reserved)
+├── scripts/             # (empty — reserved)
 ├── .env.example
-├── docker-compose.yml
 └── README.md
 ```
-
-See [docs/STRUCTURE.md](docs/STRUCTURE.md) for details.
 
 ## Tech Stack
 
@@ -56,12 +53,12 @@ cp .env.example .env
 
 | Variable | Used by |
 |----------|---------|
-| `MONGO_URL` | Backend API, `scripts/mongodb-ping.js` |
+| `MONGO_URL` | Backend API |
 | `JWT_SECRET`, `JWT_REFRESH_SECRET` | Backend auth |
 | `PORT`, `NODE_ENV`, `CLIENT_URL` | Backend server / CORS |
 | `API_URL` | Public backend URL (same as API in most setups) |
 | `REACT_APP_API_URL` | React build + `client/public/config.js` |
-| `AWS_SECRETS_MANAGER_SECRET_ID` | Production: JSON secret in AWS (see [docs/AWS_SECRETS.md](docs/AWS_SECRETS.md)) |
+| `AWS_SECRETS_MANAGER_SECRET_ID` | Production: JSON secret in AWS Secrets Manager |
 
 Notes:
 - Do not add spaces around `=`.
@@ -103,14 +100,14 @@ Target deployment for production:
 - Frontend: S3 + CloudFront
 - Backend API: ECS Fargate (or Elastic Beanstalk/App Runner)
 - Database: MongoDB Atlas
-- Secrets: [AWS Secrets Manager](docs/AWS_SECRETS.md) (single JSON secret for URLs + DB + JWT)
+- Secrets: AWS Secrets Manager (single JSON secret for URLs + DB + JWT)
 - DNS + TLS: Route 53 + ACM
 - Logging/metrics: CloudWatch
 
 ## Production Hardening Checklist
 
 - ~~Remove all hardcoded fallback secrets and fallback Mongo URI~~ (done for Mongo URI; JWT dev fallbacks remain for local only)
-- ~~Move all secrets to managed secret storage~~ (AWS Secrets Manager supported — see docs/AWS_SECRETS.md)
+- ~~Move all secrets to managed secret storage~~ (AWS Secrets Manager supported)
 - Add refresh token rotation/revocation strategy
 - Tighten input validation for pages/workspaces payloads
 - Add API and integration tests for critical flows

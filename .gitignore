@@ -6,8 +6,5 @@
 # Generated at dev/build from root .env or AWS secrets
 client/public/config.js
 
-# Local script overrides
-scripts/mongodb.config.json
-
 # OS / editor
 .DS_Store
