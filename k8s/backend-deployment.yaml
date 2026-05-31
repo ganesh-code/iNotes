@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inotes-backend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: inotes-backend
+
+  template:
+    metadata:
+      labels:
+        app: inotes-backend
+
+    spec:
+      containers:
+        - name: inotes-backend
+          image: 940401725141.dkr.ecr.ap-south-1.amazonaws.com/inotes-backend:latest
+
+          env:
+            - name: MONGO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: inotes-secret
+                  key: MONGO_URL
+
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: inotes-secret
+                  key: JWT_SECRET
+
+            - name: JWT_REFRESH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: inotes-secret
+                  key: JWT_REFRESH_SECRET
+
+            - name: CLIENT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: inotes-secret
+                  key: CLIENT_URL
+
+          ports:
+            - containerPort: 5500

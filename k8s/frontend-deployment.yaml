@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: inotes-frontend
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: inotes-frontend
+
+  template:
+    metadata:
+      labels:
+        app: inotes-frontend
+
+    spec:
+      containers:
+        - name: inotes-frontend
+          image: 940401725141.dkr.ecr.ap-south-1.amazonaws.com/inotes-frontend:latest
+
+          ports:
+            - containerPort: 3000
